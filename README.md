@@ -153,16 +153,17 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport bou
 
 ## Hosted site
 
-The `web/` directory contains a static-export Next.js site for GitHub Pages with a client-side free checker, pricing copy only (no billing backend), clean metadata, robots.txt, and sitemap. Direct browser probes can be blocked by CORS; those results stay `unknown` and point users to the CLI. The waitlist uses a Formspree free form after the owner creates one ID; see `web/README.md`.
+The static Next.js site is hosted on GitHub Pages at <https://deepanshupal.github.io/claimwatch/> with the permanent `/claimwatch` base path. The repository now includes a server-side checker Worker (`worker/`) that removes the browser-CORS wall without weakening Claimwatch's evidence rules. Production proxy and waitlist rollout are paused; the currently deployed site still uses direct browser checks.
+
+See [`docs/STATUS.md`](docs/STATUS.md) for the exact implementation state, completed smoke checks, platform-by-platform findings, known limitations, and release plan.
 
 ## Roadmap
 
-- Fixture-backed adapters for more registries and networks
-- Optional SQLite state for long histories
-- Alert deduplication and retry policy
-- Signed event payloads
-- A maintained Docker image
-- Managed hosted watches, history, and team workflows (the current site is a product preview)
+- Deploy the tested free-tier Worker and connect the GitHub Pages UI.
+- Configure and verify the free Formspree waitlist.
+- Run the 18-platform taken/available website-vs-CLI release audit in `audit/`.
+- Add opt-in hosted watchlists and alert scheduling after the open-source flow is proven.
+- Add more authenticated adapters only where they improve evidence quality without creating false confidence.
 
 ## License
 
