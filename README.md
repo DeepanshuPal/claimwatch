@@ -1,10 +1,10 @@
-# Claimwatch
+# Watch My Handle
 
-**Know when a name moves.** Claimwatch is an open-source CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
+**Know when a name moves.** Watch My Handle is powered by the open-source `claimwatch` CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
 
 It is for the awkward window between “we want that identity” and “someone remembered to check”: a founder waiting on a domain, a team protecting a brand, or an individual tracking the same handle across platforms.
 
-Claimwatch is self-hostable and has no server component. Run it from cron, a $0 GitHub Actions schedule, or any machine that can keep a small JSON state file.
+Watch My Handle is self-hostable and has no required server component. Run it from cron, a $0 GitHub Actions schedule, or any machine that can keep a small JSON state file.
 
 > **Alpha software.** Platform checks are evidence, not a claim guarantee. Confirm availability in the platform or registrar before making decisions.
 
@@ -24,7 +24,7 @@ Every adapter is conservative. A challenge, rate limit, geo block, login wall, r
 
 ### Instagram: optional Apify backend
 
-Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-profile-scraper`) for Instagram checks. The actor starts around **$1.60 per 1,000 profiles** and new accounts can use free platform credits first; check current Apify pricing before relying on that number. The token is read only from the environment and must never be committed. Without it, Claimwatch uses the public profile fallback and reports `unknown` when Instagram throttles or challenges the request.
+Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-profile-scraper`) for Instagram checks. The actor starts around **$1.60 per 1,000 profiles** and new accounts can use free platform credits first; check current Apify pricing before relying on that number. The token is read only from the environment and must never be committed. Without it, the claimwatch CLI uses the public profile fallback and reports `unknown` when Instagram throttles or challenges the request.
 
 ## Quickstart
 
@@ -74,7 +74,7 @@ alerts:
     url: "${CLAIMWATCH_WEBHOOK_URL}"
 ```
 
-Claimwatch sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
+The claimwatch CLI sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
 
 ### SMTP email
 
@@ -95,7 +95,7 @@ Secrets are read from environment variables at runtime. Never commit a filled co
 
 ### GitHub Actions (recommended)
 
-Copy the committed `.github/workflows/claimwatch.yml`, add your `claimwatch.yml`, and configure any optional repository secrets. It runs daily at 06:17 UTC and commits the state file back so change detection survives ephemeral runners. Change the cron to `17 * * * *` for hourly checks. A copy also lives at `docs/claimwatch-workflow.yml` for installations where the GitHub token used to publish Claimwatch cannot create workflow files.
+Copy the committed `.github/workflows/claimwatch.yml`, add your `claimwatch.yml`, and configure any optional repository secrets. It runs daily at 06:17 UTC and commits the state file back so change detection survives ephemeral runners. Change the cron to `17 * * * *` for hourly checks. A copy also lives at `docs/claimwatch-workflow.yml` for installations where the GitHub token used to publish the claimwatch CLI cannot create workflow files.
 
 The workflow uses only GitHub-hosted Actions and the public repository. Normal public-repo usage fits GitHub's free model; platform quotas and policies can change.
 
@@ -120,11 +120,11 @@ If you run in ephemeral CI, persist `.claimwatch/state.json` between runs. Keep 
 
 ### Domains
 
-RDAP is free and standardized, but coverage and semantics vary by registry. “No RDAP record + no DNS” is reported as available with an explicit instruction to confirm at a registrar. Claimwatch does not buy or reserve names.
+RDAP is free and standardized, but coverage and semantics vary by registry. “No RDAP record + no DNS” is reported as available with an explicit instruction to confirm at a registrar. Watch My Handle does not buy or reserve names.
 
 ### GitHub
 
-The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by Claimwatch.
+The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by the claimwatch CLI.
 
 ### X
 

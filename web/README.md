@@ -1,4 +1,4 @@
-# Claimwatch web
+# Watch My Handle web
 
 Next.js app for Vercel. The free checker runs in the visitor's browser and calls public endpoints directly. There is no checker backend, database, or paid service. Browser CORS restrictions are reported as `unknown`; the UI never turns a failed probe into an `available` result.
 
@@ -15,4 +15,4 @@ Formspree is the selected $0 route. Create a free form at https://formspree.io/,
 
 ## Deploy
 
-Set Vercel's root directory to `web`. No environment variables are required. Replace `https://claimwatch.vercel.app` in metadata and sitemap if the production hostname differs.
+Set Vercel's root directory to `web`. No environment variables are required. The canonical production hostname is `https://watchmyhandle.com` in metadata, sitemap, and robots.
