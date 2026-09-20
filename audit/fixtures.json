@@ -1,0 +1,23 @@
+{
+  "note": "Known-taken fixtures are public accounts/packages. Available fixtures must be generated uniquely at audit time and independently confirmed against the platform source immediately before use; never treat a guessed random string as ground truth.",
+  "taken": {
+    "github": "torvalds",
+    "youtube": "mrbeast",
+    "linkedin": "billgates",
+    "reddit": "spez",
+    "threads": "zuck",
+    "twitch": "ninja",
+    "pinterest": "pinterest",
+    "snapchat": "snap",
+    "bluesky": "pfrazee",
+    "mastodon": "gargron@mastodon.social",
+    "telegram": "durov",
+    "producthunt": "rrhoover",
+    "substack": "platformer",
+    "medium": "ev",
+    "devto": "ben",
+    "npm": "react",
+    "pypi": "requests",
+    "dockerhub": "jpetazzo"
+  }
+}

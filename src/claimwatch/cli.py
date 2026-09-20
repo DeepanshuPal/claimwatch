@@ -26,12 +26,26 @@ def main() -> None:
     parser.add_argument("--config", "-c", type=Path, default=Path("claimwatch.yml"))
     parser.add_argument("--state", type=Path, default=Path(".claimwatch/state.json"))
     parser.add_argument("--no-alerts", action="store_true", help="Check and persist state without sending alerts")
+    parser.add_argument("--workers", type=int, default=8, help="Concurrent checks (default: 8)")
     args = parser.parse_args()
-    config = load_config(args.config)
-    targets = [Target(item["platform"], item.get("handle") or item.get("domain") or item["value"], item.get("label")) for item in config.get("targets", [])]
+    try:
+        config = load_config(args.config) or {}
+    except FileNotFoundError:
+        parser.error(f"config file not found: {args.config}")
+    except (OSError, ValueError, yaml.YAMLError, json.JSONDecodeError) as exc:
+        parser.error(f"could not read config: {exc}")
+    if not isinstance(config, dict):
+        parser.error("config root must be an object/map")
+    try:
+        targets = [
+            Target(item["platform"], item.get("handle") or item.get("domain") or item["value"], item.get("label"))
+            for item in config.get("targets", [])
+        ]
+    except (KeyError, TypeError) as exc:
+        parser.error(f"invalid target entry: missing or invalid {exc}")
     if not targets:
         parser.error("config must contain at least one target")
-    observations, events = run(targets, args.state, github_token=os.getenv("GITHUB_TOKEN"))
+    observations, events = run(targets, args.state, github_token=os.getenv("GITHUB_TOKEN"), workers=args.workers)
     print(json.dumps({"observations": [item.to_dict() for item in observations], "events": [item.to_dict() for item in events]}, indent=2))
     if events and not args.no_alerts:
         alert_config = config.get("alerts", {})

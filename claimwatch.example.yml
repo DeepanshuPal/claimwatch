@@ -20,6 +20,5 @@ targets:
   - {platform: npm, handle: example-brand}
   - {platform: pypi, handle: example-brand}
   - {platform: dockerhub, handle: examplebrand}
-alerts:
-  webhook:
-    url: "${CLAIMWATCH_WEBHOOK_URL}"
+# Alerts are optional. See README.md before enabling a webhook or SMTP.
+alerts: {}

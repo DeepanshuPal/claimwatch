@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -41,13 +42,25 @@ def diff(previous: dict[str, dict[str, Any]], current: Observation) -> list[Even
     return events
 
 
-def run(targets: list[Target], state_path: Path, *, github_token: str | None = None) -> tuple[list[Observation], list[Event]]:
+def _check(target: Target, github_token: str | None) -> Observation:
+    return checker_for(target.platform, github_token=github_token).check(target)
+
+
+def run(
+    targets: list[Target],
+    state_path: Path,
+    *,
+    github_token: str | None = None,
+    workers: int = 8,
+) -> tuple[list[Observation], list[Event]]:
+    """Check targets concurrently while preserving config order in output/state."""
     previous = load_state(state_path)
-    observations: list[Observation] = []
-    events: list[Event] = []
-    for target in targets:
-        observation = checker_for(target.platform, github_token=github_token).check(target)
-        observations.append(observation)
-        events.extend(diff(previous, observation))
-    save_state(state_path, observations)
-    return observations, events
+    observations: list[Observation | None] = [None] * len(targets)
+    with ThreadPoolExecutor(max_workers=max(1, min(workers, len(targets)))) as pool:
+        futures = {pool.submit(_check, target, github_token): index for index, target in enumerate(targets)}
+        for future in as_completed(futures):
+            observations[futures[future]] = future.result()
+    completed = [item for item in observations if item is not None]
+    events = [event for item in completed for event in diff(previous, item)]
+    save_state(state_path, completed)
+    return completed, events
