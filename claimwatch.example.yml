@@ -1,4 +1,4 @@
-# SAMPLE DATA ONLY. Copy to watch-my-handle.yml and replace these values.
+# SAMPLE DATA ONLY. Copy to claimwatch.yml and replace these values.
 targets:
   - {platform: domain, domain: example-brand.com}
   - {platform: github, handle: example-brand}
@@ -22,4 +22,4 @@ targets:
   - {platform: dockerhub, handle: examplebrand}
 alerts:
   webhook:
-    url: "${WATCH_MY_HANDLE_WEBHOOK_URL}"
+    url: "${CLAIMWATCH_WEBHOOK_URL}"

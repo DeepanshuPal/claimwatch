@@ -1,5 +1,5 @@
 Metadata-Version: 2.4
-Name: watch-my-handle
+Name: claimwatch
 Version: 0.1.0
 Summary: Watch domains and social handles for meaningful identity changes.
 Author: Deepanshu Pal
@@ -19,13 +19,13 @@ Requires-Dist: pytest>=8; extra == "dev"
 Requires-Dist: ruff>=0.6; extra == "dev"
 Dynamic: license-file
 
-# Watch My Handle
+# Claimwatch
 
-**Know when a name moves.** Watch My Handle is an open-source CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
+**Know when a name moves.** Claimwatch is an open-source CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
 
 It is for the awkward window between “we want that identity” and “someone remembered to check”: a founder waiting on a domain, a team protecting a brand, or an individual tracking the same handle across platforms.
 
-Watch My Handle is self-hostable and has no server component. Run it from cron, a $0 GitHub Actions schedule, or any machine that can keep a small JSON state file.
+Claimwatch is self-hostable and has no server component. Run it from cron, a $0 GitHub Actions schedule, or any machine that can keep a small JSON state file.
 
 > **Alpha software.** Platform checks are evidence, not a claim guarantee. Confirm availability in the platform or registrar before making decisions.
 
@@ -44,16 +44,16 @@ The social adapters are intentionally conservative. A `404` can mean available, 
 ## Quickstart
 
 ```bash
-git clone https://github.com/DeepanshuPal/watch-my-handle.git
-cd watch-my-handle
+git clone https://github.com/DeepanshuPal/claimwatch.git
+cd claimwatch
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
-cp watch-my-handle.example.yml watch-my-handle.yml
-watch-my-handle --config watch-my-handle.yml --no-alerts
+cp claimwatch.example.yml claimwatch.yml
+claimwatch --config claimwatch.yml --no-alerts
 ```
 
-The first run emits `first_seen` events and writes `.watch-my-handle/state.json`. Later runs emit only field changes:
+The first run emits `first_seen` events and writes `.claimwatch/state.json`. Later runs emit only field changes:
 
 - `availability_changed`
 - `owner_changed`
@@ -86,10 +86,10 @@ JSON configs are supported too. The committed example contains **sample data onl
 ```yaml
 alerts:
   webhook:
-    url: "${WATCH_MY_HANDLE_WEBHOOK_URL}"
+    url: "${CLAIMWATCH_WEBHOOK_URL}"
 ```
 
-Watch My Handle sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
+Claimwatch sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
 
 ### SMTP email
 
@@ -111,7 +111,7 @@ Secrets are read from environment variables at runtime. Never commit a filled co
 Cron is enough:
 
 ```cron
-17 */6 * * * cd /opt/watch-my-handle && .venv/bin/watch-my-handle -c watch-my-handle.yml >> watch-my-handle.log 2>&1
+17 */6 * * * cd /opt/claimwatch && .venv/bin/claimwatch -c claimwatch.yml >> claimwatch.log 2>&1
 ```
 
 A sensible starting cadence is:
@@ -120,17 +120,17 @@ A sensible starting cadence is:
 - GitHub: every 1-6 hours. Set `GITHUB_TOKEN` for a higher API limit; the checker also works unauthenticated.
 - X, Instagram, TikTok: every 12-24 hours with jitter. Faster scraping is brittle and more likely to trigger blocks.
 
-If you run in ephemeral CI, persist `.watch-my-handle/state.json` between runs. Keep permissions read-only by default, pin third-party Actions, and store config secrets in the CI secret store.
+If you run in ephemeral CI, persist `.claimwatch/state.json` between runs. Keep permissions read-only by default, pin third-party Actions, and store config secrets in the CI secret store.
 
 ## Platform reality, without hand-waving
 
 ### Domains
 
-RDAP is free and standardized, but coverage and semantics vary by registry. “No RDAP record + no DNS” is reported as available with an explicit instruction to confirm at a registrar. Watch My Handle does not buy or reserve names.
+RDAP is free and standardized, but coverage and semantics vary by registry. “No RDAP record + no DNS” is reported as available with an explicit instruction to confirm at a registrar. Claimwatch does not buy or reserve names.
 
 ### GitHub
 
-The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by Watch My Handle.
+The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by Claimwatch.
 
 ### X
 

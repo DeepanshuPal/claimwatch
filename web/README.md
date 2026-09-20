@@ -6,7 +6,7 @@ Static Next.js site deployed on GitHub Pages. The free checker calls the Cloudfl
 
 ```bash
 npm install
-NEXT_PUBLIC_CHECK_API_URL=https://watch-my-handle-checker.<account>.workers.dev npm run dev
+NEXT_PUBLIC_CHECK_API_URL=https://claimwatch-checker.<account>.workers.dev npm run dev
 ```
 
 ## Waitlist capture
@@ -15,6 +15,6 @@ Formspree is the selected $0 route. Create a free form on the assistant-operated
 
 ## Deploy on GitHub Pages
 
-`.github/workflows/pages.yml` builds and deploys `web/out` on every push to `main`. The workflow sets `GITHUB_PAGES=true`, so Next.js uses `/watch-my-handle` as `basePath` and `assetPrefix` for `https://deepanshupal.github.io/watch-my-handle/`.
+`.github/workflows/pages.yml` builds and deploys `web/out` on every push to `main`. The workflow sets `GITHUB_PAGES=true`, so Next.js uses `/claimwatch` as `basePath` and `assetPrefix` for `https://deepanshupal.github.io/claimwatch/`.
 
 Add the Worker origin as the repository variable `NEXT_PUBLIC_CHECK_API_URL`; the workflow passes it into the static build.

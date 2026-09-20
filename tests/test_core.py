@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from watch_my_handle.core import diff, load_state, save_state
-from watch_my_handle.models import Observation, Target
+from claimwatch.core import diff, load_state, save_state
+from claimwatch.models import Observation, Target
 
 
 def test_first_seen_event():

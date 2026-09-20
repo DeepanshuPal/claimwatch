@@ -30,7 +30,7 @@ jobs:
       - name: Build static site
         working-directory: web
         env:
-          # Production is GitHub project Pages at /watch-my-handle.
+          # Production is GitHub project Pages at /claimwatch.
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_CHECK_API_URL: ${{ vars.NEXT_PUBLIC_CHECK_API_URL }}
         run: npm run build

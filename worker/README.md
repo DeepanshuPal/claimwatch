@@ -1,4 +1,4 @@
-# Watch My Handle checker Worker
+# Claimwatch checker Worker
 
 A minimal Cloudflare Worker proxy for the 18 checks shown on Watch My Handle. It sends live public-source requests from the server so browser CORS does not turn the entire result set into `unknown`.
 

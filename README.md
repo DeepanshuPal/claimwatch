@@ -1,6 +1,6 @@
 # Watch My Handle
 
-**Know when a name moves.** Watch My Handle is powered by the open-source `watch-my-handle` CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
+**Know when a name moves.** Watch My Handle is powered by the open-source `claimwatch` CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
 
 It is for the awkward window between “we want that identity” and “someone remembered to check”: a founder waiting on a domain, a team protecting a brand, or an individual tracking the same handle across platforms.
 
@@ -24,21 +24,21 @@ Every adapter is conservative. A challenge, rate limit, geo block, login wall, r
 
 ### Instagram: optional Apify backend
 
-Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-profile-scraper`) for Instagram checks. The actor starts around **$1.60 per 1,000 profiles** and new accounts can use free platform credits first; check current Apify pricing before relying on that number. The token is read only from the environment and must never be committed. Without it, the watch-my-handle CLI uses the public profile fallback and reports `unknown` when Instagram throttles or challenges the request.
+Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-profile-scraper`) for Instagram checks. The actor starts around **$1.60 per 1,000 profiles** and new accounts can use free platform credits first; check current Apify pricing before relying on that number. The token is read only from the environment and must never be committed. Without it, the claimwatch CLI uses the public profile fallback and reports `unknown` when Instagram throttles or challenges the request.
 
 ## Quickstart
 
 ```bash
-git clone https://github.com/DeepanshuPal/watch-my-handle.git
-cd watch-my-handle
+git clone https://github.com/DeepanshuPal/claimwatch.git
+cd claimwatch
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
-cp watch-my-handle.example.yml watch-my-handle.yml
-watch-my-handle --config watch-my-handle.yml --no-alerts
+cp claimwatch.example.yml claimwatch.yml
+claimwatch --config claimwatch.yml --no-alerts
 ```
 
-The first run emits `first_seen` events and writes `.watch-my-handle/state.json`. Later runs emit only field changes:
+The first run emits `first_seen` events and writes `.claimwatch/state.json`. Later runs emit only field changes:
 
 - `availability_changed`
 - `owner_changed`
@@ -71,10 +71,10 @@ JSON configs are supported too. The committed example contains **sample data onl
 ```yaml
 alerts:
   webhook:
-    url: "${WATCH_MY_HANDLE_WEBHOOK_URL}"
+    url: "${CLAIMWATCH_WEBHOOK_URL}"
 ```
 
-The watch-my-handle CLI sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
+The claimwatch CLI sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
 
 ### SMTP email
 
@@ -95,7 +95,7 @@ Secrets are read from environment variables at runtime. Never commit a filled co
 
 ### GitHub Actions (recommended)
 
-Copy the committed `.github/workflows/watch-my-handle.yml`, add your `watch-my-handle.yml`, and configure any optional repository secrets. It runs daily at 06:17 UTC and commits the state file back so change detection survives ephemeral runners. Change the cron to `17 * * * *` for hourly checks. A copy also lives at `docs/watch-my-handle-workflow.yml` for installations where the GitHub token used to publish the watch-my-handle CLI cannot create workflow files.
+Copy the committed `.github/workflows/claimwatch.yml`, add your `claimwatch.yml`, and configure any optional repository secrets. It runs daily at 06:17 UTC and commits the state file back so change detection survives ephemeral runners. Change the cron to `17 * * * *` for hourly checks. A copy also lives at `docs/claimwatch-workflow.yml` for installations where the GitHub token used to publish the claimwatch CLI cannot create workflow files.
 
 The workflow uses only GitHub-hosted Actions and the public repository. Normal public-repo usage fits GitHub's free model; platform quotas and policies can change.
 
@@ -105,7 +105,7 @@ The workflow uses only GitHub-hosted Actions and the public repository. Normal p
 Cron is enough:
 
 ```cron
-17 */6 * * * cd /opt/watch-my-handle && .venv/bin/watch-my-handle -c watch-my-handle.yml >> watch-my-handle.log 2>&1
+17 */6 * * * cd /opt/claimwatch && .venv/bin/claimwatch -c claimwatch.yml >> claimwatch.log 2>&1
 ```
 
 A sensible starting cadence is:
@@ -114,7 +114,7 @@ A sensible starting cadence is:
 - GitHub: every 1-6 hours. Set `GITHUB_TOKEN` for a higher API limit; the checker also works unauthenticated.
 - X, Instagram, TikTok: every 12-24 hours with jitter. Faster scraping is brittle and more likely to trigger blocks.
 
-If you run in ephemeral CI, persist `.watch-my-handle/state.json` between runs. Keep permissions read-only by default, pin third-party Actions, and store config secrets in the CI secret store.
+If you run in ephemeral CI, persist `.claimwatch/state.json` between runs. Keep permissions read-only by default, pin third-party Actions, and store config secrets in the CI secret store.
 
 ## Platform reality, without hand-waving
 
@@ -124,7 +124,7 @@ RDAP is free and standardized, but coverage and semantics vary by registry. “N
 
 ### GitHub
 
-The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by the watch-my-handle CLI.
+The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by the claimwatch CLI.
 
 ### X
 
@@ -153,7 +153,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport bou
 
 ## Hosted site
 
-The static Next.js site is hosted on GitHub Pages at <https://deepanshupal.github.io/watch-my-handle/> with the permanent `/watch-my-handle` base path. The repository now includes a server-side checker Worker (`worker/`) that removes the browser-CORS wall without weakening Watch My Handle's evidence rules. Production proxy and waitlist rollout are paused; the currently deployed site still uses direct browser checks.
+The static Next.js site is hosted on GitHub Pages at <https://deepanshupal.github.io/claimwatch/> with the permanent `/claimwatch` base path. The repository now includes a server-side checker Worker (`worker/`) that removes the browser-CORS wall without weakening Claimwatch's evidence rules. Production proxy and waitlist rollout are paused; the currently deployed site still uses direct browser checks.
 
 See [`docs/STATUS.md`](docs/STATUS.md) for the exact implementation state, completed smoke checks, platform-by-platform findings, known limitations, and release plan.
 

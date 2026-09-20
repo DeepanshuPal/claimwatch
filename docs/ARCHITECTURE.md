@@ -1,6 +1,6 @@
 # Architecture and process
 
-Watch My Handle is deliberately small: one run loads targets, calls one adapter per target, compares normalized observations with a local JSON snapshot, emits typed events, then sends those events through configured transports.
+Claimwatch is deliberately small: one run loads targets, calls one adapter per target, compares normalized observations with a local JSON snapshot, emits typed events, then sends those events through configured transports.
 
 ## Boundaries
 
@@ -9,7 +9,7 @@ Watch My Handle is deliberately small: one run loads targets, calls one adapter 
 - **Transports** consume the same event objects. Adding Slack, NATS, or another destination should not change a checker.
 - **CLI** owns config parsing and environment-variable expansion.
 
-The state file is intentionally plain JSON. It can live on a persistent volume, in an object-store sync step, or as a CI artifact. Watch My Handle does not need a database or daemon.
+The state file is intentionally plain JSON. It can live on a persistent volume, in an object-store sync step, or as a CI artifact. Claimwatch does not need a database or daemon.
 
 ## Adding a checker
 
@@ -21,4 +21,4 @@ The state file is intentionally plain JSON. It can live on a persistent volume, 
 
 ## Operating principle
 
-A missing profile page is a signal, not a guarantee that registration will succeed. Platform blocks, reserved names, registry gaps, and eventual consistency exist. Watch My Handle alerts you to investigate; the registrar or platform's own claim flow is authoritative.
+A missing profile page is a signal, not a guarantee that registration will succeed. Platform blocks, reserved names, registry gaps, and eventual consistency exist. Claimwatch alerts you to investigate; the registrar or platform's own claim flow is authoritative.
