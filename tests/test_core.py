@@ -23,3 +23,19 @@ def test_state_round_trip(tmp_path: Path):
     item = Observation(Target("github", "octocat"), "taken", owner="583231")
     save_state(path, [item])
     assert load_state(path)[item.target.key]["owner"] == "583231"
+
+
+def test_run_preserves_target_order_when_checks_finish_out_of_order(tmp_path, monkeypatch):
+    import time
+
+    from claimwatch import core
+
+    def fake_check(target, github_token):
+        if target.value == "slow":
+            time.sleep(0.03)
+        return Observation(target, "taken")
+
+    monkeypatch.setattr(core, "_check", fake_check)
+    targets = [Target("github", "slow"), Target("github", "fast")]
+    observations, _ = core.run(targets, tmp_path / "state.json", workers=2)
+    assert [item.target.value for item in observations] == ["slow", "fast"]

@@ -28,25 +28,43 @@ Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-pro
 
 ## Quickstart
 
+Requirements: Python 3.10+ and an internet connection. No account, API key, database, or server is required for the basic CLI.
+
 ```bash
 git clone https://github.com/DeepanshuPal/claimwatch.git
 cd claimwatch
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -e .
 cp claimwatch.example.yml claimwatch.yml
 claimwatch --config claimwatch.yml --no-alerts
 ```
 
-The first run emits `first_seen` events and writes `.claimwatch/state.json`. Later runs emit only field changes:
+The command checks targets concurrently (eight at a time by default), so blocked platforms do not make a full watchlist run serially. Use `--workers 1` for strictly sequential checks. Each network request has a bounded timeout.
 
-- `availability_changed`
-- `owner_changed`
-- `last_activity_changed`
+A successful run prints JSON to stdout and writes `.claimwatch/state.json`. The shape is:
 
-Remove `--no-alerts` after configuring a transport.
+```json
+{
+  "observations": [
+    {
+      "target": {"platform": "github", "value": "octocat", "label": null},
+      "status": "taken",
+      "owner": "583231",
+      "detail": "account login=octocat",
+      "evidence_url": "https://github.com/octocat"
+    }
+  ],
+  "events": [
+    {"kind": "first_seen", "before": null, "after": "taken"}
+  ]
+}
+```
 
-## Configure targets
+Timestamps and some optional fields are omitted above. Status is one of `available`, `taken`, `unknown`, or `error`. `unknown` is intentional when a platform blocks or cannot prove absence; it is not converted into a false green result.
+
+The committed example is safe to run as-is and has alerts disabled. Edit `claimwatch.yml` to use your own targets:
 
 ```yaml
 targets:
@@ -54,15 +72,23 @@ targets:
     domain: your-brand.com
   - platform: github
     handle: your-brand
-  - platform: x
-    handle: your_brand
-  - platform: instagram
-    handle: your_brand
-  - platform: tiktok
-    handle: your_brand
+  - platform: mastodon
+    handle: your-brand@mastodon.social
+alerts: {}
 ```
 
-JSON configs are supported too. The committed example contains **sample data only**.
+The first run emits `first_seen` events. Later runs emit only `availability_changed`, `owner_changed`, and `last_activity_changed` events. The CLI exits `0` when the run completes, even if an individual platform is conservatively `unknown`; it exits `2` if a checker returns `error`.
+
+### Supported target names
+
+`domain`, `github`, `x`, `instagram`, `tiktok`, `youtube`, `linkedin`, `reddit`, `threads`, `twitch`, `pinterest`, `snapchat`, `bluesky`, `mastodon`, `telegram`, `producthunt`, `substack`, `medium`, `dev.to`, `npm`, `pypi`, and `dockerhub`. Mastodon requires `handle@instance`. JSON configuration is supported when the config filename ends in `.json`.
+
+### Common failures
+
+- `config file not found`: copy `claimwatch.example.yml` or pass `--config /path/to/file`.
+- `unknown` result: read `detail` and `evidence_url`; the platform blocked the probe or did not expose dependable evidence.
+- GitHub rate limit: optionally set `GITHUB_TOKEN` to a narrowly scoped token; basic checks work without one.
+- Start over locally: remove `.claimwatch/state.json` to reset comparison history.
 
 ## Alerts
 
