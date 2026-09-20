@@ -11,3 +11,8 @@ web/.next/
 web/.vercel/
 *.egg-info/
 /claimwatch.yml
+
+# JavaScript dependencies
+node_modules/
+
+web/out/

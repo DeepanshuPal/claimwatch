@@ -33,6 +33,7 @@ jobs:
           # Project Pages lives at /claimwatch. Remove this env var after
           # watchmyhandle.com is attached as the repository's custom domain.
           GITHUB_PAGES: "true"
+          NEXT_PUBLIC_CHECK_API_URL: ${{ vars.NEXT_PUBLIC_CHECK_API_URL }}
         run: npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
