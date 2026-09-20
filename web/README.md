@@ -17,4 +17,4 @@ Formspree is the selected $0 route. Create a free form on the assistant-operated
 
 `.github/workflows/pages.yml` builds and deploys `web/out` on every push to `main`. The workflow sets `GITHUB_PAGES=true`, so Next.js uses `/claimwatch` as `basePath` and `assetPrefix` for `https://deepanshupal.github.io/claimwatch/`.
 
-Add the Worker origin as the repository variable `NEXT_PUBLIC_CHECK_API_URL`; the workflow passes it into the static build. After `watchmyhandle.com` is attached in Pages settings, remove `GITHUB_PAGES` and keep the same Worker origin.
+Add the Worker origin as the repository variable `NEXT_PUBLIC_CHECK_API_URL`; the workflow passes it into the static build.

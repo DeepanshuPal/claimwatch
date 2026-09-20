@@ -13,6 +13,6 @@ npx wrangler login
 npm run deploy
 ```
 
-The only endpoint is `GET /check?platform=github&name=example`; `/health` reports the adapter count and deployed version. No API secret is required at runtime. CORS is restricted to the GitHub Pages origin, the planned custom domain, and local development.
+The only endpoint is `GET /check?platform=github&name=example`; `/health` reports the adapter count and deployed version. No API secret is required at runtime. CORS is restricted to the GitHub Pages production origin and local development.
 
 After deployment, set `NEXT_PUBLIC_CHECK_API_URL` to the returned `workers.dev` origin for the web build.

@@ -30,8 +30,7 @@ jobs:
       - name: Build static site
         working-directory: web
         env:
-          # Project Pages lives at /claimwatch. Remove this env var after
-          # watchmyhandle.com is attached as the repository's custom domain.
+          # Production is GitHub project Pages at /claimwatch.
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_CHECK_API_URL: ${{ vars.NEXT_PUBLIC_CHECK_API_URL }}
         run: npm run build

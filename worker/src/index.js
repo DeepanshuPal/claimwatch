@@ -24,7 +24,6 @@ const adapters = {
 
 const allowedOrigins = new Set([
   "https://deepanshupal.github.io",
-  "https://watchmyhandle.com",
   "http://localhost:3000"
 ]);
 
