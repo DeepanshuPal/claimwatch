@@ -1,4 +1,4 @@
-from claimwatch.checkers import checker_for
+from watch_my_handle.checkers import checker_for
 
 
 def test_supported_platforms():

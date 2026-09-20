@@ -1,0 +1,17 @@
+LICENSE
+README.md
+pyproject.toml
+src/watch_my_handle/__init__.py
+src/watch_my_handle/checkers.py
+src/watch_my_handle/cli.py
+src/watch_my_handle/core.py
+src/watch_my_handle/models.py
+src/watch_my_handle/transports.py
+src/watch_my_handle.egg-info/PKG-INFO
+src/watch_my_handle.egg-info/SOURCES.txt
+src/watch_my_handle.egg-info/dependency_links.txt
+src/watch_my_handle.egg-info/entry_points.txt
+src/watch_my_handle.egg-info/requires.txt
+src/watch_my_handle.egg-info/top_level.txt
+tests/test_checkers.py
+tests/test_core.py

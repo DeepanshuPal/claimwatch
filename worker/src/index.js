@@ -51,7 +51,7 @@ export async function checkPlatform(platform, rawName, fetcher = fetch) {
 async function probe(platform, url, mode, accept = "text/html,application/json", fetcher = fetch) {
   try {
     const response = await fetcher(url, {
-      headers: { Accept: accept, "User-Agent": "Watch-My-Handle/1.0 (+https://github.com/DeepanshuPal/claimwatch)" },
+      headers: { Accept: accept, "User-Agent": "Watch-My-Handle/1.0 (+https://github.com/DeepanshuPal/watch-my-handle)" },
       redirect: "follow",
       signal: AbortSignal.timeout(TIMEOUT_MS)
     });
@@ -74,7 +74,7 @@ export default {
     const headers = cors(origin);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
-    if (url.pathname === "/health") return Response.json({ ok: true, service: "claimwatch-checker", version: VERSION, platforms: Object.keys(adapters).length }, { headers });
+    if (url.pathname === "/health") return Response.json({ ok: true, service: "watch-my-handle-checker", version: VERSION, platforms: Object.keys(adapters).length }, { headers });
     if (request.method !== "GET" || url.pathname !== "/check") return Response.json({ error: "Not found" }, { status: 404, headers });
     const platform = url.searchParams.get("platform") || "";
     const name = url.searchParams.get("name") || "";

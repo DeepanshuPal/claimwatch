@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const projectBasePath = process.env.GITHUB_PAGES === "true" ? "/claimwatch" : "";
+const projectBasePath = process.env.GITHUB_PAGES === "true" ? "/watch-my-handle" : "";
 
 const nextConfig = {
   output: "export",

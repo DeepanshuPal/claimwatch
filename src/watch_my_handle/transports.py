@@ -21,8 +21,8 @@ class WebhookTransport(Transport):
         self.url, self.headers = url, headers or {}
 
     def send(self, events: list[Event]) -> None:
-        payload = json.dumps({"source": "claimwatch", "events": [event.to_dict() for event in events]}).encode()
-        headers = {"Content-Type": "application/json", "User-Agent": "claimwatch/0.1", **self.headers}
+        payload = json.dumps({"source": "watch-my-handle", "events": [event.to_dict() for event in events]}).encode()
+        headers = {"Content-Type": "application/json", "User-Agent": "watch-my-handle/0.1", **self.headers}
         with urllib.request.urlopen(urllib.request.Request(self.url, data=payload, headers=headers, method="POST"), timeout=15):
             pass
 
@@ -33,7 +33,7 @@ class SMTPTransport(Transport):
 
     def send(self, events: list[Event]) -> None:
         message = EmailMessage()
-        message["Subject"] = self.config.get("subject", f"Claimwatch: {len(events)} change(s)")
+        message["Subject"] = self.config.get("subject", f"Watch My Handle: {len(events)} change(s)")
         message["From"] = self.config["from"]
         message["To"] = self.config["to"]
         message.set_content(json.dumps([event.to_dict() for event in events], indent=2))

@@ -3,14 +3,14 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
-.claimwatch/
+.watch-my-handle/
 .env
 *.log
 web/node_modules/
 web/.next/
 web/.vercel/
 *.egg-info/
-/claimwatch.yml
+/watch-my-handle.yml
 
 # JavaScript dependencies
 node_modules/

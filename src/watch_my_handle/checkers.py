@@ -11,7 +11,7 @@ from typing import Any, ClassVar
 
 from .models import Observation, Target
 
-USER_AGENT = "claimwatch/0.2 (+https://github.com/DeepanshuPal/claimwatch)"
+USER_AGENT = "watch-my-handle/0.2 (+https://github.com/DeepanshuPal/watch-my-handle)"
 
 
 def _request(url: str, *, timeout: int = 12, headers: dict[str, str] | None = None) -> tuple[int, bytes, dict[str, str]]:
@@ -161,7 +161,7 @@ class FederatedChecker(Checker):
     def check(self, target: Target) -> Observation:
         value = target.value.lstrip("@").strip()
         if "@" not in value:
-            return Observation(target, "unknown", detail="Mastodon is federated; use handle@instance so Claimwatch can query the correct server")
+            return Observation(target, "unknown", detail="Mastodon is federated; use handle@instance so Watch My Handle can query the correct server")
         handle, instance = value.rsplit("@", 1)
         url = f"https://{instance}/api/v1/accounts/lookup?acct={urllib.parse.quote(handle)}"
         try:

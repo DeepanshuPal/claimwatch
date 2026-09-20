@@ -22,9 +22,9 @@ def load_config(path: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="claimwatch", description="Watch handles and domains for identity changes.")
-    parser.add_argument("--config", "-c", type=Path, default=Path("claimwatch.yml"))
-    parser.add_argument("--state", type=Path, default=Path(".claimwatch/state.json"))
+    parser = argparse.ArgumentParser(prog="watch-my-handle", description="Watch handles and domains for identity changes.")
+    parser.add_argument("--config", "-c", type=Path, default=Path("watch-my-handle.yml"))
+    parser.add_argument("--state", type=Path, default=Path(".watch-my-handle/state.json"))
     parser.add_argument("--no-alerts", action="store_true", help="Check and persist state without sending alerts")
     args = parser.parse_args()
     config = load_config(args.config)

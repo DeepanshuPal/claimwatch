@@ -2,7 +2,7 @@
 
 _Last updated: 2026-09-20_
 
-Watch My Handle is open-source first. The repository contains the complete CLI, 18 platform adapters, domain checks, alert transports, the GitHub Pages web app, and a server-side checker proxy implementation. Production rollout of the proxy and waitlist is intentionally paused. The current public site remains on GitHub Pages at <https://deepanshupal.github.io/claimwatch/>; no custom domain is planned for the current phase.
+Watch My Handle is open-source first. The repository contains the complete CLI, 18 platform adapters, domain checks, alert transports, the GitHub Pages web app, and a server-side checker proxy implementation. Production rollout of the proxy and waitlist is intentionally paused. The current public site remains on GitHub Pages at <https://deepanshupal.github.io/watch-my-handle/>; no custom domain is planned for the current phase.
 
 ## What is implemented
 
@@ -10,7 +10,7 @@ Watch My Handle is open-source first. The repository contains the complete CLI, 
 - Conservative verdicts: blocks, throttles, timeouts, and ambiguous absence return `unknown`, never a false `available` result.
 - State comparison for availability, ownership, and activity changes.
 - Webhook and SMTP notifications.
-- Static Next.js site for GitHub Pages, permanently using the `/claimwatch` base path.
+- Static Next.js site for GitHub Pages, permanently using the `/watch-my-handle` base path.
 - A minimal Cloudflare Worker in `worker/` that moves the 18 platform probes server-side and avoids browser CORS failures while preserving the same conservative verdict rules.
 - Proxy-backed web UI with live-result detail, summary counts, and CLI as the power-user path.
 - Formspree-compatible waitlist form slot. No production form ID has been configured yet.
@@ -51,8 +51,8 @@ Automated checks completed:
 
 ## Current production state
 
-- Hosting: GitHub Pages at <https://deepanshupal.github.io/claimwatch/>.
-- Production base path: `/claimwatch`.
+- Hosting: GitHub Pages at <https://deepanshupal.github.io/watch-my-handle/>.
+- Production base path: `/watch-my-handle`.
 - CLI: ready for use from this repository.
 - Browser checker on the currently deployed site: still the older direct-browser version, so CORS can produce many `unknown` results.
 - Worker: implemented and tested locally, not deployed.
@@ -64,7 +64,7 @@ Automated checks completed:
 1. Deploy `worker/` to Cloudflare Workers on the free plan. No runtime secret or paid service is required.
 2. Set the repository variable `NEXT_PUBLIC_CHECK_API_URL` to the deployed Worker origin.
 3. Create a free Formspree form, replace `REPLACE_WITH_FORM_ID`, and confirm a test submission arrives.
-4. Build and deploy the static site to GitHub Pages. Keep `/claimwatch`; do not buy or configure a domain.
+4. Build and deploy the static site to GitHub Pages. Keep `/watch-my-handle`; do not buy or configure a domain.
 5. Run the release audit in `audit/README.md`:
    - one independently verified taken fixture and one independently verified available fixture for every platform;
    - compare live website and CLI results;

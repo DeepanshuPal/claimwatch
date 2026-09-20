@@ -1,0 +1,2 @@
+[console_scripts]
+watch-my-handle = watch_my_handle.cli:main

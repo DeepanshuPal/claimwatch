@@ -3,7 +3,7 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "claimwatch"
+name = "watch-my-handle"
 version = "0.1.0"
 description = "Watch domains and social handles for meaningful identity changes."
 readme = "README.md"
@@ -21,7 +21,7 @@ classifiers = [
 ]
 
 [project.scripts]
-claimwatch = "claimwatch.cli:main"
+watch-my-handle = "watch_my_handle.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]

@@ -1,5 +1,5 @@
 {
-  "name": "claimwatch-checker-worker",
+  "name": "watch-my-handle-checker-worker",
   "private": true,
   "type": "module",
   "scripts": {

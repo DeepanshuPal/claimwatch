@@ -1,4 +1,4 @@
-name: Claimwatch
+name: Watch My Handle
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: claimwatch
+  group: watch-my-handle
   cancel-in-progress: false
 
 jobs:
@@ -27,14 +27,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          CLAIMWATCH_WEBHOOK_URL: ${{ secrets.CLAIMWATCH_WEBHOOK_URL }}
+          WATCH_MY_HANDLE_WEBHOOK_URL: ${{ secrets.WATCH_MY_HANDLE_WEBHOOK_URL }}
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        run: claimwatch --config claimwatch.yml
+        run: watch-my-handle --config watch-my-handle.yml
       - name: Persist public-safe state
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .claimwatch/state.json
-          git diff --cached --quiet || git commit -m 'chore: update Claimwatch state'
+          git add .watch-my-handle/state.json
+          git diff --cached --quiet || git commit -m 'chore: update Watch My Handle state'
           git push
