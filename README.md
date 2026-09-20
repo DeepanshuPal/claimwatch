@@ -153,7 +153,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport bou
 
 ## Hosted site
 
-The `web/` directory contains a Next.js site for Vercel with a client-side free checker, pricing copy only (no billing backend), clean metadata, robots.txt, and sitemap. Direct browser probes can be blocked by CORS; those results stay `unknown` and point users to the CLI. The waitlist uses a Formspree free form after the owner creates one ID; see `web/README.md`.
+The `web/` directory contains a static-export Next.js site for GitHub Pages with a client-side free checker, pricing copy only (no billing backend), clean metadata, robots.txt, and sitemap. Direct browser probes can be blocked by CORS; those results stay `unknown` and point users to the CLI. The waitlist uses a Formspree free form after the owner creates one ID; see `web/README.md`.
 
 ## Roadmap
 

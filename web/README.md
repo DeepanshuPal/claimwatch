@@ -13,6 +13,10 @@ npm run dev
 
 Formspree is the selected $0 route. Create a free form at https://formspree.io/, then replace `REPLACE_WITH_FORM_ID` in `app/page.tsx`. This ID is public routing metadata, not a secret. Until that one-time setup, the form is intentionally not claimed as operational.
 
-## Deploy
+## Deploy on GitHub Pages
 
-Set Vercel's root directory to `web`. No environment variables are required. The canonical production hostname is `https://watchmyhandle.com` in metadata, sitemap, and robots.
+`.github/workflows/pages.yml` builds and deploys `web/out` on every push to `main`. The workflow sets `GITHUB_PAGES=true`, so Next.js uses `/claimwatch` as `basePath` and `assetPrefix` for the default project URL at `https://deepanshupal.github.io/claimwatch/`.
+
+After `watchmyhandle.com` is attached in the repository's Pages settings, remove the `GITHUB_PAGES` environment variable from the workflow. The same static export then builds at the domain root. The canonical production hostname is already `https://watchmyhandle.com` in metadata, sitemap, and robots.
+
+The site has no runtime server dependency. The checker calls public endpoints from the visitor's browser, and CORS-blocked checks stay `unknown`. The waitlist posts directly to Formspree after its form ID is configured.
