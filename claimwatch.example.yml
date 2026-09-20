@@ -1,25 +1,25 @@
-# Sample data only. Replace these targets with identities you care about.
+# SAMPLE DATA ONLY. Copy to claimwatch.yml and replace these values.
 targets:
-  - platform: domain
-    domain: example.com
-    label: Sample company domain
-  - platform: github
-    handle: octocat
-  - platform: x
-    handle: github
-  - platform: instagram
-    handle: github
-  - platform: tiktok
-    handle: github
-
-# Secrets belong in environment variables, never in this file.
+  - {platform: domain, domain: example-brand.com}
+  - {platform: github, handle: example-brand}
+  - {platform: instagram, handle: example.brand}
+  - {platform: youtube, handle: examplebrand}
+  - {platform: linkedin, handle: example-brand}
+  - {platform: reddit, handle: examplebrand}
+  - {platform: threads, handle: example.brand}
+  - {platform: twitch, handle: examplebrand}
+  - {platform: pinterest, handle: examplebrand}
+  - {platform: snapchat, handle: examplebrand}
+  - {platform: bluesky, handle: examplebrand.bsky.social}
+  - {platform: mastodon, handle: example@mastodon.social}
+  - {platform: telegram, handle: examplebrand}
+  - {platform: producthunt, handle: examplebrand}
+  - {platform: substack, handle: examplebrand}
+  - {platform: medium, handle: examplebrand}
+  - {platform: dev.to, handle: examplebrand}
+  - {platform: npm, handle: example-brand}
+  - {platform: pypi, handle: example-brand}
+  - {platform: dockerhub, handle: examplebrand}
 alerts:
   webhook:
     url: "${CLAIMWATCH_WEBHOOK_URL}"
-  # smtp:
-  #   host: smtp.example.com
-  #   port: 587
-  #   username: "${SMTP_USERNAME}"
-  #   password: "${SMTP_PASSWORD}"
-  #   from: alerts@example.com
-  #   to: you@example.com

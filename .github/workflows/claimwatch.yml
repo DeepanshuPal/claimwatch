@@ -1,0 +1,40 @@
+name: Claimwatch
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 06:17 UTC. Change to '17 * * * *' for hourly checks.
+    - cron: '17 6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: claimwatch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install .
+      - name: Run checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          CLAIMWATCH_WEBHOOK_URL: ${{ secrets.CLAIMWATCH_WEBHOOK_URL }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: claimwatch --config claimwatch.yml
+      - name: Persist public-safe state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .claimwatch/state.json
+          git diff --cached --quiet || git commit -m 'chore: update Claimwatch state'
+          git push

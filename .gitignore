@@ -6,3 +6,8 @@ __pycache__/
 .claimwatch/
 .env
 *.log
+web/node_modules/
+web/.next/
+web/.vercel/
+*.egg-info/
+/claimwatch.yml

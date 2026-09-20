@@ -10,15 +10,21 @@ Claimwatch is self-hostable and has no server component. Run it from cron, a $0 
 
 ## What works
 
-| Target | Signal source | Availability | Owner change | Activity change |
-| --- | --- | ---: | ---: | ---: |
-| Domain | RDAP, with DNS fallback | Yes, with registrar confirmation | Registry handle/name | RDAP event dates |
-| GitHub username | Public GitHub REST API | Yes | Stable numeric user ID | Account `updated_at` |
-| X handle | Public profile page | Best effort | Handle only | Not reliable |
-| Instagram handle | Public profile page | Best effort | Handle only | Not reliable |
-| TikTok handle | Public profile page | Best effort | Handle only | Not reliable |
+| Target | Signal source | Quality | Availability | Ownership/activity |
+| --- | --- | --- | --- | --- |
+| Domain | RDAP + DNS fallback | Strong registry evidence | Yes, registrar confirmation required | Registry handle and event dates |
+| GitHub | Public REST API | Strong | Yes | Numeric account ID, `updated_at` |
+| Instagram | Optional Apify actor; raw profile fallback | Stronger with Apify, weak raw | Unknown on absence/throttle | Profile ID/activity when Apify exposes it |
+| npm, PyPI, Docker Hub | Public registry APIs | Strong | Yes | Package/user identity; versions where exposed |
+| Mastodon | Instance account lookup | Strong when `handle@instance` is supplied | Yes per instance | Instance account ID, last status date |
+| YouTube, Reddit, Twitch, Pinterest, Bluesky, Product Hunt, Substack, Medium, dev.to | Public profile endpoints | Best effort | A 404 is a lead; confirm in-platform | Handle only unless source exposes more |
+| X, LinkedIn, Threads, Snapchat, Telegram, TikTok | Public profile pages | Weak / frequently challenged | Conservative `unknown` on ambiguous 404 or throttle | Handle only |
 
-The social adapters are intentionally conservative. A `404` can mean available, reserved, blocked, geo-restricted, or temporarily unavailable. A challenge or rate-limit response becomes `unknown`, never a false “available.”
+Every adapter is conservative. A challenge, rate limit, geo block, login wall, redirect, or ambiguous `404` becomes `unknown`, never a false `available`.
+
+### Instagram: optional Apify backend
+
+Set `APIFY_TOKEN` to use Apify's Instagram Profile Scraper (`apify/instagram-profile-scraper`) for Instagram checks. The actor starts around **$1.60 per 1,000 profiles** and new accounts can use free platform credits first; check current Apify pricing before relying on that number. The token is read only from the environment and must never be committed. Without it, Claimwatch uses the public profile fallback and reports `unknown` when Instagram throttles or challenges the request.
 
 ## Quickstart
 
@@ -87,6 +93,15 @@ Secrets are read from environment variables at runtime. Never commit a filled co
 
 ## Run it for nearly $0
 
+### GitHub Actions (recommended)
+
+Copy the committed `.github/workflows/claimwatch.yml`, add your `claimwatch.yml`, and configure any optional repository secrets. It runs daily at 06:17 UTC and commits the state file back so change detection survives ephemeral runners. Change the cron to `17 * * * *` for hourly checks. A copy also lives at `docs/claimwatch-workflow.yml` for installations where the GitHub token used to publish Claimwatch cannot create workflow files.
+
+The workflow uses only GitHub-hosted Actions and the public repository. Normal public-repo usage fits GitHub's free model; platform quotas and policies can change.
+
+### Cron
+
+
 Cron is enough:
 
 ```cron
@@ -136,6 +151,10 @@ pytest -q
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport boundaries.
 
+## Hosted site
+
+The `web/` directory contains a Next.js site for Vercel with a client-side free checker, pricing copy only (no billing backend), clean metadata, robots.txt, and sitemap. Direct browser probes can be blocked by CORS; those results stay `unknown` and point users to the CLI. The waitlist uses a Formspree free form after the owner creates one ID; see `web/README.md`.
+
 ## Roadmap
 
 - Fixture-backed adapters for more registries and networks
@@ -143,9 +162,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport bou
 - Alert deduplication and retry policy
 - Signed event payloads
 - A maintained Docker image
-- An optional hosted tier with managed schedules, history, and team workflows
-
-The hosted tier is a future product, not part of this repository. The core stays useful on its own.
+- Managed hosted watches, history, and team workflows (the current site is a product preview)
 
 ## License
 
