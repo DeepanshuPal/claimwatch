@@ -1,0 +1,25 @@
+# Sample data only. Replace these targets with identities you care about.
+targets:
+  - platform: domain
+    domain: example.com
+    label: Sample company domain
+  - platform: github
+    handle: octocat
+  - platform: x
+    handle: github
+  - platform: instagram
+    handle: github
+  - platform: tiktok
+    handle: github
+
+# Secrets belong in environment variables, never in this file.
+alerts:
+  webhook:
+    url: "${CLAIMWATCH_WEBHOOK_URL}"
+  # smtp:
+  #   host: smtp.example.com
+  #   port: 587
+  #   username: "${SMTP_USERNAME}"
+  #   password: "${SMTP_PASSWORD}"
+  #   from: alerts@example.com
+  #   to: you@example.com

@@ -1,0 +1,173 @@
+Metadata-Version: 2.4
+Name: claimwatch
+Version: 0.1.0
+Summary: Watch domains and social handles for meaningful identity changes.
+Author: Deepanshu Pal
+License: MIT
+Keywords: domain-monitoring,username-checker,brand-monitoring,osint,cli
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: PyYAML<7,>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"
+Dynamic: license-file
+
+# Claimwatch
+
+**Know when a name moves.** Claimwatch is an open-source CLI that watches domains and handles for availability, ownership changes, and activity changes, then emits webhook or email alerts.
+
+It is for the awkward window between “we want that identity” and “someone remembered to check”: a founder waiting on a domain, a team protecting a brand, or an individual tracking the same handle across platforms.
+
+Claimwatch is self-hostable and has no server component. Run it from cron, a $0 GitHub Actions schedule, or any machine that can keep a small JSON state file.
+
+> **Alpha software.** Platform checks are evidence, not a claim guarantee. Confirm availability in the platform or registrar before making decisions.
+
+## What works
+
+| Target | Signal source | Availability | Owner change | Activity change |
+| --- | --- | ---: | ---: | ---: |
+| Domain | RDAP, with DNS fallback | Yes, with registrar confirmation | Registry handle/name | RDAP event dates |
+| GitHub username | Public GitHub REST API | Yes | Stable numeric user ID | Account `updated_at` |
+| X handle | Public profile page | Best effort | Handle only | Not reliable |
+| Instagram handle | Public profile page | Best effort | Handle only | Not reliable |
+| TikTok handle | Public profile page | Best effort | Handle only | Not reliable |
+
+The social adapters are intentionally conservative. A `404` can mean available, reserved, blocked, geo-restricted, or temporarily unavailable. A challenge or rate-limit response becomes `unknown`, never a false “available.”
+
+## Quickstart
+
+```bash
+git clone https://github.com/DeepanshuPal/claimwatch.git
+cd claimwatch
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp claimwatch.example.yml claimwatch.yml
+claimwatch --config claimwatch.yml --no-alerts
+```
+
+The first run emits `first_seen` events and writes `.claimwatch/state.json`. Later runs emit only field changes:
+
+- `availability_changed`
+- `owner_changed`
+- `last_activity_changed`
+
+Remove `--no-alerts` after configuring a transport.
+
+## Configure targets
+
+```yaml
+targets:
+  - platform: domain
+    domain: your-brand.com
+  - platform: github
+    handle: your-brand
+  - platform: x
+    handle: your_brand
+  - platform: instagram
+    handle: your_brand
+  - platform: tiktok
+    handle: your_brand
+```
+
+JSON configs are supported too. The committed example contains **sample data only**.
+
+## Alerts
+
+### Webhook
+
+```yaml
+alerts:
+  webhook:
+    url: "${CLAIMWATCH_WEBHOOK_URL}"
+```
+
+Claimwatch sends a JSON body with `source` and an `events` array. Point it at your own service, n8n, or another self-hosted webhook consumer.
+
+### SMTP email
+
+```yaml
+alerts:
+  smtp:
+    host: smtp.example.com
+    port: 587
+    username: "${SMTP_USERNAME}"
+    password: "${SMTP_PASSWORD}"
+    from: alerts@example.com
+    to: you@example.com
+```
+
+Secrets are read from environment variables at runtime. Never commit a filled config or `.env` file.
+
+## Run it for nearly $0
+
+Cron is enough:
+
+```cron
+17 */6 * * * cd /opt/claimwatch && .venv/bin/claimwatch -c claimwatch.yml >> claimwatch.log 2>&1
+```
+
+A sensible starting cadence is:
+
+- Domains: every 6-24 hours. RDAP data does not need minute-level polling.
+- GitHub: every 1-6 hours. Set `GITHUB_TOKEN` for a higher API limit; the checker also works unauthenticated.
+- X, Instagram, TikTok: every 12-24 hours with jitter. Faster scraping is brittle and more likely to trigger blocks.
+
+If you run in ephemeral CI, persist `.claimwatch/state.json` between runs. Keep permissions read-only by default, pin third-party Actions, and store config secrets in the CI secret store.
+
+## Platform reality, without hand-waving
+
+### Domains
+
+RDAP is free and standardized, but coverage and semantics vary by registry. “No RDAP record + no DNS” is reported as available with an explicit instruction to confirm at a registrar. Claimwatch does not buy or reserve names.
+
+### GitHub
+
+The public REST endpoint is reliable for whether a profile exists. Unauthenticated requests have a lower rate limit. A token is optional and should be scoped as narrowly as possible; no token is ever stored by Claimwatch.
+
+### X
+
+X's official API access and pricing can change. V1 does not require it. The adapter checks the public profile URL, which is cheap but can be challenged and cannot prove dormancy. A future official-API adapter belongs behind the same checker interface.
+
+### Instagram and TikTok
+
+Neither offers a dependable, free, general-purpose username availability API for this use case. Public pages frequently challenge automation. These adapters are best-effort discovery signals. They do not bypass login, CAPTCHA, or platform controls.
+
+## Exit behavior
+
+- `0`: checks completed (individual targets may still be `unknown`)
+- `2`: at least one checker returned `error`
+
+Every run prints structured JSON to stdout, so it composes with `jq`, log pipelines, and CI.
+
+## Development
+
+```bash
+pip install -e '.[dev]'
+ruff check .
+pytest -q
+```
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for adapter and transport boundaries.
+
+## Roadmap
+
+- Fixture-backed adapters for more registries and networks
+- Optional SQLite state for long histories
+- Alert deduplication and retry policy
+- Signed event payloads
+- A maintained Docker image
+- An optional hosted tier with managed schedules, history, and team workflows
+
+The hosted tier is a future product, not part of this repository. The core stays useful on its own.
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
